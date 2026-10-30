@@ -1,12 +1,11 @@
 package ru.itis.listeners;
 
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import ru.itis.repository.FilesRepository;
+import ru.itis.repository.FilesRepositoryJdbcImpl;
 import ru.itis.repository.UsersRepository;
 import ru.itis.repository.UsersRepositoryJdbcImpl;
-import ru.itis.services.SignUpService;
-import ru.itis.services.SignUpServiceImpl;
-import ru.itis.services.UsersService;
-import ru.itis.services.UsersServiceImpl;
+import ru.itis.services.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -32,12 +31,16 @@ public class CustomServletContextListener implements ServletContextListener {
         dataSource.setPassword(DB_PASSWORD);
 
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(dataSource);
+        FilesRepository filesRepository = new FilesRepositoryJdbcImpl(dataSource);
+
         SignUpService signUpService = new SignUpServiceImpl(usersRepository);
         UsersService usersService = new UsersServiceImpl(usersRepository);
+        FileService fileService = new FileServiceImpl(filesRepository);
 
         servletContext.setAttribute("usersRepository", usersRepository);
         servletContext.setAttribute("signUpService", signUpService);
         servletContext.setAttribute("usersService", usersService);
+        servletContext.setAttribute("fileService", fileService);
 
     }
 
